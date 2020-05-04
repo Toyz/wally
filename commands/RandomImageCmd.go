@@ -52,7 +52,7 @@ func getWallPapers(category string, resolution string) ([]wallhaven.Wallpaper, e
 		return nil, err
 	}
 	if len(papers) == 0 {
-		return nil, errors.New("no wallpapers found")
+		return nil, errors.New("No Wallpapers have been found")
 	}
 
 	return papers, nil

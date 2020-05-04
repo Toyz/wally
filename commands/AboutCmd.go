@@ -32,6 +32,10 @@ func aboutWally(s *discordgo.Session, m *discordgo.MessageCreate, args []string)
 		Inline: false,
 	})
 
+	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
+		Name:   "Invite me",
+		Value:  "https://discordapp.com/api/oauth2/authorize?client_id=706563357116727397&permissions=83968&scope=bot",
+	})
 	_, e := s.ChannelMessageSendEmbed(m.ChannelID, embed)
 	return e
 }

@@ -12,7 +12,7 @@ func init() {
 
 func singleImage(s *discordgo.Session, m *discordgo.MessageCreate, args []string) error {
 	if len(args) == 0 {
-		return errors.New("invalid usage `!v <wallpaper id>` (example: `!v 94x38z`)")
+		return errors.New("Invalid command usage `!v <wallpaper id>` (example: `!v 94x38z`)")
 	}
 
 	image, err := wallhaven.SingleImage(args[0])

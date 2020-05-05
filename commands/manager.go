@@ -9,14 +9,16 @@ type CommandFunc func(s *discordgo.Session, m *discordgo.MessageCreate, args []s
 
 type Command struct {
 	Command string
+	Desc    string
 	Func    CommandFunc
 }
 
 var commands []Command
 
-func Register(cmd string, action CommandFunc) {
+func Register(cmd, desc string, action CommandFunc) {
 	commands = append(commands, Command{
 		Command: cmd,
+		Desc:    desc,
 		Func:    action,
 	})
 }

@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	Register("!v", singleImage)
+	Register("!v", "View a single image `!v 94x38z`", singleImage)
 }
 
 func singleImage(s *discordgo.Session, m *discordgo.MessageCreate, args []string) error {

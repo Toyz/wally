@@ -10,13 +10,13 @@ import (
 
 func init() {
 	// Random General,Anime,Person
-	Register("!r", randomImage(""))
+	Register("!r", "Random Image `!r 1920x1080`", randomImage(""))
 	// Random General
-	Register("!rg", randomImage("100"))
+	Register("!rg", "Random General Image `!rg 1920x1080`", randomImage("100"))
 	// Random Anime
-	Register("!ra", randomImage("010"))
+	Register("!ra", "Random Anime Image `!ra 1920x1080`", randomImage("010"))
 	// Random Person
-	Register("!rp", randomImage("001"))
+	Register("!rp", "Random Person Image `!rp 1920x1080`", randomImage("001"))
 }
 
 func randomImage(category string) CommandFunc {

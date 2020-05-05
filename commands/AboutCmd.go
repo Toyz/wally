@@ -3,15 +3,15 @@ package commands
 import "github.com/bwmarrin/discordgo"
 
 func init() {
-	Register("!about", aboutWally)
+	Register("!about", "About me", aboutWally)
 }
 
 func aboutWally(s *discordgo.Session, m *discordgo.MessageCreate, args []string) error {
 	embed := new(discordgo.MessageEmbed)
 	embed.Thumbnail = &discordgo.MessageEmbedThumbnail{
-		URL:      "https://i.imgur.com/7EAX8Zi.gif",
-		Width:    245,
-		Height:   245,
+		URL:    "https://i.imgur.com/7EAX8Zi.gif",
+		Width:  245,
+		Height: 245,
 	}
 	embed.Title = "I am Wally"
 	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
@@ -33,8 +33,8 @@ func aboutWally(s *discordgo.Session, m *discordgo.MessageCreate, args []string)
 	})
 
 	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-		Name:   "Invite me",
-		Value:  "https://discordapp.com/api/oauth2/authorize?client_id=706563357116727397&permissions=83968&scope=bot",
+		Name:  "Invite me",
+		Value: "https://discordapp.com/api/oauth2/authorize?client_id=706563357116727397&permissions=83968&scope=bot",
 	})
 	_, e := s.ChannelMessageSendEmbed(m.ChannelID, embed)
 	return e

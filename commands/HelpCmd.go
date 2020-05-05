@@ -14,7 +14,7 @@ func showHelp(s *discordgo.Session, m *discordgo.MessageCreate, args []string) e
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 			Name:   cmd.Command,
 			Value:  cmd.Desc,
-			Inline: true,
+			Inline: false,
 		})
 	}
 

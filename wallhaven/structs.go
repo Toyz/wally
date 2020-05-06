@@ -107,6 +107,12 @@ func (w Wallpaper) CreateEmbed() *discordgo.MessageEmbed {
 			Value:  w.Source,
 		})
 	}
+	
+	embed.Footer = &discordgo.MessageEmbedFooter{
+		Text:         fmt.Sprintf("Posted: %s", w.CreatedAt),
+		IconURL:      "",
+		ProxyIconURL: "",
+	}
 
 	return embed
 }

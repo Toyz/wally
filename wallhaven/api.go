@@ -32,7 +32,7 @@ func SingleImage(id string) (wallpaper Wallpaper, err error) {
 
 func RandomImage(category, purity, resolution string) (wallpaper []Wallpaper, err error) {
 	var data Multi
-	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/search?sorting=random&categories=%s&purity=%s&seed=%s&resolutions=%s&apiKey=%s", category, purity, rand.String(6), resolution, apiKey), &data)
+	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/search?sorting=random&categories=%s&purity=%s&seed=%s&resolutions=%s&apikey=%s", category, purity, rand.String(6), resolution, apiKey), &data)
 	if data.Error != "" {
 		err = errors.New("image does not exist")
 		return

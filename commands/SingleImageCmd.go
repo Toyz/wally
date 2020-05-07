@@ -7,10 +7,15 @@ import (
 )
 
 func init() {
-	Register("!v", "View a single image `!v 94x38z`", singleImage)
+	Register(Command{
+		Command: "!v",
+		Desc:    "View a single image `!v 94x38z`",
+		NSFW:    false,
+		Func:    singleImage,
+	})
 }
 
-func singleImage(s *discordgo.Session, m *discordgo.MessageCreate, args []string) error {
+func singleImage(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string) error {
 	if len(args) == 0 {
 		return errors.New("Invalid command usage `!v <wallpaper id>` (example: `!v 94x38z`)")
 	}
@@ -18,6 +23,10 @@ func singleImage(s *discordgo.Session, m *discordgo.MessageCreate, args []string
 	image, err := wallhaven.SingleImage(args[0])
 	if err != nil {
 		return err
+	}
+
+	if image.Purity == "nsfw" && !c.NSFW {
+		return errors.New("Cannot display NSFW images in non-NSFW channel")
 	}
 
 	_, err = s.ChannelMessageSendEmbed(m.ChannelID, image.CreateEmbed())

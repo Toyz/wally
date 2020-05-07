@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/toyz/wally/commands"
+	"github.com/toyz/wally/wallhaven"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"log"
 	"os"
@@ -31,9 +32,10 @@ func main() {
 		return
 	}
 
-
 	dg.AddHandler(ready)
 	dg.AddHandler(messageCreate)
+
+	wallhaven.SetAPIKey(*APIKey)
 
 	err = dg.Open()
 	if err != nil {
@@ -67,7 +69,13 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			return
 		}
 
-		if err := cmd(s, m, objs[1:]); err != nil {
+		c, err := s.Channel(m.ChannelID)
+		if err != nil {
+			log.Printf("failed to get channel: %v", err)
+			return
+		}
+
+		if err := cmd(s, c, m, objs[1:]); err != nil {
 			_, _ = s.ChannelMessageSend(m.ChannelID, err.Error())
 		}
 	}

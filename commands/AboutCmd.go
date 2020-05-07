@@ -3,10 +3,15 @@ package commands
 import "github.com/bwmarrin/discordgo"
 
 func init() {
-	Register("!about", "About me", aboutWally)
+	Register(Command{
+		Command: "!about",
+		Desc:    "About me",
+		NSFW:    false,
+		Func:    aboutWally,
+	})
 }
 
-func aboutWally(s *discordgo.Session, m *discordgo.MessageCreate, args []string) error {
+func aboutWally(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string) error {
 	embed := new(discordgo.MessageEmbed)
 	embed.Thumbnail = &discordgo.MessageEmbedThumbnail{
 		URL:    "https://i.imgur.com/7EAX8Zi.gif",

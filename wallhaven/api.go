@@ -9,11 +9,18 @@ import (
 	"time"
 )
 
-var myClient = &http.Client{Timeout: 10 * time.Second}
+var (
+	myClient = &http.Client{Timeout: 10 * time.Second}
+	apiKey string
+)
+
+func SetAPIKey(key string) {
+	apiKey = key
+}
 
 func SingleImage(id string) (wallpaper Wallpaper, err error) {
 	var data Single
-	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/w/%s", id), &data)
+	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/w/%s?apikey=%s", id, apiKey), &data)
 	if data.Error != "" {
 		err = errors.New("image does not exist")
 		return
@@ -23,9 +30,9 @@ func SingleImage(id string) (wallpaper Wallpaper, err error) {
 	return
 }
 
-func RandomImage(category string, resolution string) (wallpaper []Wallpaper, err error) {
+func RandomImage(category, purity, resolution string) (wallpaper []Wallpaper, err error) {
 	var data Multi
-	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/search?sorting=random&categories=%s&purity=110&seed=%s&resolutions=%s", category, rand.String(6), resolution), &data)
+	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/search?sorting=random&categories=%s&purity=%s&seed=%s&resolutions=%s&apiKey=%s", category, purity, rand.String(6), resolution, apiKey), &data)
 	if data.Error != "" {
 		err = errors.New("image does not exist")
 		return

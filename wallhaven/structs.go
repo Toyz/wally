@@ -79,6 +79,10 @@ func (w Wallpaper) CreateEmbed() *discordgo.MessageEmbed {
 		embed.Color = 16748544
 	}
 
+	if w.Purity == "nsfw" {
+		embed.Color = 16711680
+	}
+
 	embed.Thumbnail = &discordgo.MessageEmbedThumbnail{
 		URL:      w.Uploader.Avatar.Two00Px,
 		Width:    200,

@@ -5,22 +5,19 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type CommandFunc func(s *discordgo.Session, m *discordgo.MessageCreate, args []string) error
+type CommandFunc func(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string) error
 
 type Command struct {
 	Command string
 	Desc    string
+	NSFW    bool
 	Func    CommandFunc
 }
 
 var commands []Command
 
-func Register(cmd, desc string, action CommandFunc) {
-	commands = append(commands, Command{
-		Command: cmd,
-		Desc:    desc,
-		Func:    action,
-	})
+func Register(cmd Command) {
+	commands = append(commands, cmd)
 }
 
 func Get(cmd string) (CommandFunc, error) {

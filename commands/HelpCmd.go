@@ -3,10 +3,15 @@ package commands
 import "github.com/bwmarrin/discordgo"
 
 func init() {
-	Register("!help", "Show this", showHelp)
+	Register(Command{
+		Command: "!help",
+		Desc:    "Show this",
+		NSFW:    false,
+		Func:    showHelp,
+	})
 }
 
-func showHelp(s *discordgo.Session, m *discordgo.MessageCreate, args []string) error {
+func showHelp(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string) error {
 	embed := new(discordgo.MessageEmbed)
 	embed.Title = "Help"
 

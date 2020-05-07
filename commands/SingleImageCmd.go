@@ -2,6 +2,7 @@ package commands
 
 import (
 	"errors"
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/toyz/wally/wallhaven"
 )
@@ -25,8 +26,8 @@ func singleImage(s *discordgo.Session, c *discordgo.Channel, m *discordgo.Messag
 		return err
 	}
 
-	if image.Purity == "nsfw" && !c.NSFW {
-		return errors.New("Cannot display NSFW images in non-NSFW channel")
+	if (image.Purity == "nsfw" || image.Purity == "sketchy") && !c.NSFW {
+		return fmt.Errorf("Cannot display **%s** images in non-NSFW channel", image.Purity)
 	}
 
 	_, err = s.ChannelMessageSendEmbed(m.ChannelID, image.CreateEmbed())

@@ -92,10 +92,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 func ready(s *discordgo.Session, _ *discordgo.Ready) {
 	log.Print("Bot is now running. Press CTRL-C to exit.")
 
-	s.UpdateStatus(0, "Eveeeee!")
+	s.UpdateStatus(0, "w!help || Eveeeee!")
 	go func() {
 		for {
-			s.UpdateStatus(0, "Eveeeee!")
+			s.UpdateStatus(0, "w!help || Eveeeee!")
 			time.Sleep(1 * time.Hour)
 		}
 	}()

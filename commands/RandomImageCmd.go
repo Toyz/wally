@@ -10,31 +10,35 @@ import (
 
 func init() {
 	Register(Command{
-		Command: "!r",
-		Desc:    "Random Image",
-		NSFW:    false,
-		Func:    randomImage(""),
+		Command:     "r",
+		Desc:        "Random Image",
+		NSFW:        false,
+		Func:        randomImage(""),
+		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
 	})
 
 	Register(Command{
-		Command: "!rg",
-		Desc:    "Random General Image",
-		NSFW:    false,
-		Func:    randomImage("100"),
+		Command:     "rg",
+		Desc:        "Random General Image",
+		NSFW:        false,
+		Func:        randomImage("100"),
+		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
 	})
 
 	Register(Command{
-		Command: "!ra",
+		Command: "ra",
 		Desc:    "Random Anime Image",
 		NSFW:    false,
 		Func:    randomImage("010"),
+		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
 	})
 
 	Register(Command{
-		Command: "!rp",
+		Command: "rp",
 		Desc:    "Random Person Image",
 		NSFW:    false,
 		Func:    randomImage("001"),
+		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
 	})
 }
 
@@ -51,7 +55,7 @@ func randomImage(category string) CommandFunc {
 		}
 
 		paper := randomWallpaper(papers)
-		paper, err = wallhaven.SingleImage(paper.ID)
+		paper, err = wallhaven.SingleImage("", paper.ID)
 		if err != nil {
 			return err
 		}
@@ -64,9 +68,10 @@ func randomImage(category string) CommandFunc {
 // 111 (general/anime/people)
 func getWallPapers(category, purity, resolution string) ([]wallhaven.Wallpaper, error) {
 	if category == "" {
+
 		category = "111"
 	}
-	papers, err := wallhaven.RandomImage(category, purity, resolution)
+	papers, err := wallhaven.RandomImage("", category, purity, resolution)
 	if err != nil {
 		return nil, err
 	}

@@ -9,19 +9,20 @@ import (
 
 func init() {
 	Register(Command{
-		Command: "!v",
+		Command: "v",
 		Desc:    "View a single image `!v 94x38z`",
 		NSFW:    false,
 		Func:    singleImage,
+		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
 	})
 }
 
 func singleImage(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string) error {
 	if len(args) == 0 {
-		return errors.New("Invalid command usage `!v <wallpaper id>` (example: `!v 94x38z`)")
+		return errors.New("Invalid command usage `w!v <wallpaper id>` (example: `!v 94x38z`)")
 	}
 
-	image, err := wallhaven.SingleImage(args[0])
+	image, err := wallhaven.SingleImage("", args[0])
 	if err != nil {
 		return err
 	}

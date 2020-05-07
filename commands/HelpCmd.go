@@ -1,13 +1,17 @@
 package commands
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"fmt"
+	"github.com/bwmarrin/discordgo"
+)
 
 func init() {
 	Register(Command{
-		Command: "!help",
+		Command: "help",
 		Desc:    "Show this",
 		NSFW:    false,
 		Func:    showHelp,
+		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
 	})
 }
 
@@ -17,7 +21,7 @@ func showHelp(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCr
 
 	for _, cmd := range commands {
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-			Name:   cmd.Command,
+			Name:  fmt.Sprintf("w!%s", cmd.Command),
 			Value:  cmd.Desc,
 			Inline: false,
 		})

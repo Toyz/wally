@@ -11,16 +11,11 @@ import (
 
 var (
 	myClient = &http.Client{Timeout: 10 * time.Second}
-	apiKey string
 )
 
-func SetAPIKey(key string) {
-	apiKey = key
-}
-
-func SingleImage(id string) (wallpaper Wallpaper, err error) {
+func SingleImage(apiKey, id string) (wallpaper Wallpaper, err error) {
 	var data Single
-	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/w/%s?apikey=%s", id, apiKey), &data)
+	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/w/%s", id), apiKey, &data)
 	if data.Error != "" {
 		err = errors.New("image does not exist")
 		return
@@ -30,9 +25,9 @@ func SingleImage(id string) (wallpaper Wallpaper, err error) {
 	return
 }
 
-func RandomImage(category, purity, resolution string) (wallpaper []Wallpaper, err error) {
+func RandomImage(apiKey, category, purity, resolution string) (wallpaper []Wallpaper, err error) {
 	var data Multi
-	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/search?sorting=random&categories=%s&purity=%s&seed=%s&resolutions=%s&apikey=%s", category, purity, rand.String(6), resolution, apiKey), &data)
+	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/search?sorting=random&categories=%s&purity=%s&seed=%s&resolutions=%s", category, purity, rand.String(6), resolution), apiKey, &data)
 	if data.Error != "" {
 		err = errors.New("image does not exist")
 		return
@@ -42,8 +37,17 @@ func RandomImage(category, purity, resolution string) (wallpaper []Wallpaper, er
 	return
 }
 
-func getJson(url string, target interface{}) error {
-	r, err := myClient.Get(url)
+func getJson(url, apiKey string, target interface{}) error {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil
+	}
+
+	if apiKey != "" {
+		req.Header.Add("X-API-Key", apiKey)
+	}
+
+	r, err := myClient.Do(req)
 	if err != nil {
 		return err
 	}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/toyz/wally/commands"
-	"github.com/toyz/wally/wallhaven"
+	"github.com/toyz/wally/tools/permissions"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"log"
 	"os"
@@ -35,8 +35,6 @@ func main() {
 	dg.AddHandler(ready)
 	dg.AddHandler(messageCreate)
 
-	wallhaven.SetAPIKey(*APIKey)
-
 	err = dg.Open()
 	if err != nil {
 		fmt.Println("error opening connection,", err)
@@ -57,13 +55,13 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if len(m.Content) == 0 {
+	if len(m.Content) < 3 {
 		return
 	}
 	
-	first := m.Content[0]
-	if first == '!' {
-		objs := strings.Split(m.Content, " ")
+	base, command := m.Content[0:2], m.Content[2:]
+	if strings.EqualFold(base, "w!") {
+		objs := strings.Split(command, " ")
 		cmd, err := commands.Get(objs[0])
 		if err != nil {
 			return
@@ -75,7 +73,17 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			return
 		}
 
-		if err := cmd(s, c, m, objs[1:]); err != nil {
+		if ok, err := permissions.MemberHasPermission(s, c.GuildID, m.Author.ID, cmd.Permissions); err != nil {
+			log.Printf("failed to get user: %v", err)
+			return
+		} else {
+			if !ok {
+				_, _ = s.ChannelMessageSend(m.ChannelID, "You do not have permission to use this command")
+				return
+			}
+		}
+
+		if err := cmd.Func(s, c, m, objs[1:]); err != nil {
 			_, _ = s.ChannelMessageSend(m.ChannelID, err.Error())
 		}
 	}

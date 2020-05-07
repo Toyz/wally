@@ -4,10 +4,11 @@ import "github.com/bwmarrin/discordgo"
 
 func init() {
 	Register(Command{
-		Command: "!about",
+		Command: "about",
 		Desc:    "About me",
 		NSFW:    false,
 		Func:    aboutWally,
+		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
 	})
 }
 

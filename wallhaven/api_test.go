@@ -7,7 +7,7 @@ const (
 )
 
 func TestSingleImage(t *testing.T) {
-	wallpaper, err := SingleImage(imageID)
+	wallpaper, err := SingleImage(imageID, "")
 	if err != nil {
 		t.Error(err)
 		t.Fail()

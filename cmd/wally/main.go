@@ -16,12 +16,10 @@ import (
 
 var (
 	Token *string
-	APIKey *string
 )
 
 func init() {
 	Token = kingpin.Flag("token", "Discord bot token").Short('t').Envar("DISCORD_BOT_TOKEN").Required().String()
-	APIKey = kingpin.Flag("api_key", "Wallhaven API Key").Short('a').Envar("WALLHAVEN_API_KEY").String()
 	kingpin.Parse()
 }
 

@@ -14,7 +14,7 @@ func init() {
 		Desc:        "Random Image",
 		NSFW:        false,
 		Func:        randomImage(""),
-		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
+		Permissions: -1,
 	})
 
 	Register(Command{
@@ -22,23 +22,23 @@ func init() {
 		Desc:        "Random General Image",
 		NSFW:        false,
 		Func:        randomImage("100"),
-		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
+		Permissions: -1,
 	})
 
 	Register(Command{
-		Command: "ra",
-		Desc:    "Random Anime Image",
-		NSFW:    false,
-		Func:    randomImage("010"),
-		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
+		Command:     "ra",
+		Desc:        "Random Anime Image",
+		NSFW:        false,
+		Func:        randomImage("010"),
+		Permissions: -1,
 	})
 
 	Register(Command{
-		Command: "rp",
-		Desc:    "Random Person Image",
-		NSFW:    false,
-		Func:    randomImage("001"),
-		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
+		Command:     "rp",
+		Desc:        "Random Person Image",
+		NSFW:        false,
+		Func:        randomImage("001"),
+		Permissions: -1,
 	})
 }
 

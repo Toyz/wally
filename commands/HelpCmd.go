@@ -7,11 +7,11 @@ import (
 
 func init() {
 	Register(Command{
-		Command: "help",
-		Desc:    "Show this",
-		NSFW:    false,
-		Func:    showHelp,
-		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
+		Command:     "help",
+		Desc:        "Show this",
+		NSFW:        false,
+		Func:        showHelp,
+		Permissions: -1,
 	})
 }
 
@@ -21,7 +21,7 @@ func showHelp(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCr
 
 	for _, cmd := range commands {
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-			Name:  fmt.Sprintf("w!%s", cmd.Command),
+			Name:   fmt.Sprintf("w!%s", cmd.Command),
 			Value:  cmd.Desc,
 			Inline: false,
 		})

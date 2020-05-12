@@ -9,11 +9,11 @@ import (
 
 func init() {
 	Register(Command{
-		Command: "v",
-		Desc:    "View a single image `!v 94x38z`",
-		NSFW:    false,
-		Func:    singleImage,
-		Permissions: discordgo.PermissionSendMessages | discordgo.PermissionAdministrator,
+		Command:     "v",
+		Desc:        "View a single image `!v 94x38z`",
+		NSFW:        false,
+		Func:        singleImage,
+		Permissions: -1,
 	})
 }
 

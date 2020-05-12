@@ -14,6 +14,10 @@ import "github.com/bwmarrin/discordgo"
 //     userID     :  userID of the member you wish to retrieve
 //     permission :  the permission you wish to check for
 func MemberHasPermission(s *discordgo.Session, guildID string, userID string, permission int) (bool, error) {
+	if permission <= 0 {
+		return true, nil
+	}
+
 	// https://github.com/bwmarrin/discordgo/wiki/FAQ#determining-if-a-role-has-a-permission
 	member, err := s.State.Member(guildID, userID)
 	if err != nil {

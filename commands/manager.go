@@ -14,6 +14,7 @@ type Command struct {
 	Command     string
 	Desc        string
 	NSFW        bool
+	Alias       bool
 	Func        CommandFunc
 	HelpFunc    HelpFunc
 	Permissions int

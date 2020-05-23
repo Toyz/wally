@@ -119,6 +119,11 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			return
 		}
 
+		if guilds.Options.DisableAliases && cmd.Alias {
+			_, _ = s.ChannelMessageSend(m.ChannelID, "Command aliases are disabled on this server")
+			return
+		}
+
 		if err := cmd.Func(s, c, m, objs[1:], &datasets.Entity{
 			Channel: channel,
 			Guild:   guilds,

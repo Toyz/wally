@@ -134,7 +134,7 @@ func configHelp() *discordgo.MessageEmbed {
 
 	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 		Name:  "Disable Category Aliases",
-		Value: "`w!config set disable_alias true|false",
+		Value: "`w!config set disable_alias true|false`",
 	})
 
 	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{

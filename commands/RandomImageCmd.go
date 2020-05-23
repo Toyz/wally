@@ -12,7 +12,7 @@ import (
 func init() {
 	Register(Command{
 		Command:     "r",
-		Desc:        "Random Image",
+		Desc:        "Random image from channel defined filters",
 		NSFW:        false,
 		Func:        randomImage(),
 		Permissions: -1,
@@ -20,24 +20,27 @@ func init() {
 
 	Register(Command{
 		Command:     "rg",
-		Desc:        "Random General Image",
+		Desc:        "Random general image",
 		NSFW:        false,
+		Alias:       true,
 		Func:        randomImage(),
 		Permissions: -1,
 	})
 
 	Register(Command{
 		Command:     "ra",
-		Desc:        "Random Anime Image",
+		Desc:        "Random image from anime",
 		NSFW:        false,
+		Alias:       true,
 		Func:        randomImage(),
 		Permissions: -1,
 	})
 
 	Register(Command{
 		Command:     "rp",
-		Desc:        "Random Person Image",
+		Desc:        "Random image of a person",
 		NSFW:        false,
+		Alias:       true,
 		Func:        randomImage(),
 		Permissions: -1,
 	})
@@ -45,10 +48,6 @@ func init() {
 
 func randomImage() CommandFunc {
 	return func(s *discordgo.Session, _ *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity, command Command) error {
-		if config.Guild.Options.DisableAliases && command.Command != "r" {
-			return errors.New("Command aliases are disabled")
-		}
-
 		filter := config.Filter.String()
 		lastRune := command.Command[len(command.Command)-1]
 		switch lastRune {

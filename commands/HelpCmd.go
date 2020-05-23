@@ -10,14 +10,14 @@ import (
 func init() {
 	Register(Command{
 		Command:     "help",
-		Desc:        "Show this",
+		Desc:        "Detailed help with `w!help {command}`",
 		NSFW:        false,
 		Func:        showHelp,
 		Permissions: -1,
 	})
 }
 
-func showHelp(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string, _ *datasets.Entity, command Command) error {
+func showHelp(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity, command Command) error {
 	if len(args) > 0 {
 		command, err := GetCommand(args[0])
 		if err != nil {
@@ -46,7 +46,11 @@ func showHelp(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCr
 		if err != nil {
 			ok = false
 		}
-		if  ok {
+		if ok {
+			if cmd.Alias && config.Guild.Options.DisableAliases {
+				continue
+			}
+
 			embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 				Name:   fmt.Sprintf("w!%s", cmd.Command),
 				Value:  cmd.Desc,

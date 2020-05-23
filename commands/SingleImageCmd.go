@@ -11,7 +11,7 @@ import (
 func init() {
 	Register(Command{
 		Command:     "v",
-		Desc:        "View a single image `!v 94x38z`",
+		Desc:        "View a single image `w!v 94x38z`",
 		NSFW:        false,
 		Func:        singleImage,
 		Permissions: -1,
@@ -30,6 +30,18 @@ func singleImage(s *discordgo.Session, c *discordgo.Channel, m *discordgo.Messag
 
 	if (image.Purity == "nsfw" || image.Purity == "sketchy") && !c.NSFW {
 		return fmt.Errorf("Cannot display **%s** images in non-NSFW channel", image.Purity)
+	}
+
+	if image.Purity == "nsfw" && !config.Purity.NSFW {
+		return fmt.Errorf("Cannot display **%s** due to filter rules", image.Purity)
+	}
+
+	if image.Purity == "sketchy" && !config.Purity.Sketchy {
+		return fmt.Errorf("Cannot display **%s** due to filter rules", image.Purity)
+	}
+
+	if image.Purity == "sfw" && !config.Purity.SFW {
+		return fmt.Errorf("Cannot display **%s** due to filter rules", image.Purity)
 	}
 
 	_, err = s.ChannelMessageSendEmbed(m.ChannelID, image.CreateEmbed())

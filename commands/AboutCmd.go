@@ -1,6 +1,9 @@
 package commands
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"github.com/bwmarrin/discordgo"
+	"github.com/toyz/wally/datasets"
+)
 
 func init() {
 	Register(Command{
@@ -12,7 +15,7 @@ func init() {
 	})
 }
 
-func aboutWally(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string) error {
+func aboutWally(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, _ []string, _ *datasets.Entity) error {
 	embed := new(discordgo.MessageEmbed)
 	embed.Thumbnail = &discordgo.MessageEmbedThumbnail{
 		URL:    "https://i.imgur.com/7EAX8Zi.gif",

@@ -3,6 +3,7 @@ package commands
 import (
 	"errors"
 	"github.com/bwmarrin/discordgo"
+	"github.com/toyz/wally/datasets"
 	"github.com/toyz/wally/wallhaven"
 	"math/rand"
 	"time"
@@ -13,49 +14,25 @@ func init() {
 		Command:     "r",
 		Desc:        "Random Image",
 		NSFW:        false,
-		Func:        randomImage(""),
-		Permissions: -1,
-	})
-
-	Register(Command{
-		Command:     "rg",
-		Desc:        "Random General Image",
-		NSFW:        false,
-		Func:        randomImage("100"),
-		Permissions: -1,
-	})
-
-	Register(Command{
-		Command:     "ra",
-		Desc:        "Random Anime Image",
-		NSFW:        false,
-		Func:        randomImage("010"),
-		Permissions: -1,
-	})
-
-	Register(Command{
-		Command:     "rp",
-		Desc:        "Random Person Image",
-		NSFW:        false,
-		Func:        randomImage("001"),
+		Func:        randomImage(),
 		Permissions: -1,
 	})
 }
 
-func randomImage(category string) CommandFunc {
-	return func(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string) error {
+func randomImage() CommandFunc {
+	return func(s *discordgo.Session, _ *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity) error {
 		resolution := ""
 		if len(args) > 0 {
 			resolution = args[0]
 		}
 
-		papers, err := getWallPapers(category, "100", resolution)
+		papers, err := getWallPapers(config.APIKey, config.Filter.String(), config.Purity.String(), resolution)
 		if err != nil {
 			return err
 		}
 
 		paper := randomWallpaper(papers)
-		paper, err = wallhaven.SingleImage("", paper.ID)
+		paper, err = wallhaven.SingleImage(config.Guild.APIKey, paper.ID)
 		if err != nil {
 			return err
 		}
@@ -66,12 +43,12 @@ func randomImage(category string) CommandFunc {
 }
 
 // 111 (general/anime/people)
-func getWallPapers(category, purity, resolution string) ([]wallhaven.Wallpaper, error) {
+func getWallPapers(apiKey, category, purity, resolution string) ([]wallhaven.Wallpaper, error) {
 	if category == "" {
 
 		category = "111"
 	}
-	papers, err := wallhaven.RandomImage("", category, purity, resolution)
+	papers, err := wallhaven.RandomImage(apiKey, category, purity, resolution)
 	if err != nil {
 		return nil, err
 	}

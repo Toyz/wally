@@ -122,7 +122,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if err := cmd.Func(s, c, m, objs[1:], &datasets.Entity{
 			Channel: channel,
 			Guild:   guilds,
-		}); err != nil {
+		}, *cmd); err != nil {
 			log.Printf("failed to send messages: %v", err)
 			_, _ = s.ChannelMessageSend(m.ChannelID, err.Error())
 		}

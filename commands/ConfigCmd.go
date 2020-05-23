@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/bwmarrin/discordgo"
 	"github.com/toyz/wally/datasets"
+	"strconv"
 	"strings"
 )
 
@@ -13,36 +14,35 @@ func init() {
 		Desc:        "Control what I can send (Purity and Filter)",
 		NSFW:        false,
 		Func:        configCommand,
-		HelpFunc: 	 configHelp,
+		HelpFunc:    configHelp,
 		Permissions: discordgo.PermissionAdministrator,
 	})
 }
 
-func configCommand(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity) error {
+func configCommand(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity, command Command) error {
 	if len(args) == 0 {
 		embed := new(discordgo.MessageEmbed)
 		embed.Title = "Wally Config"
 
-		var keySet string
-		if config.Guild.APIKey == "" {
-			keySet = "False"
-		} else {
-			keySet = "True"
-		}
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 			Name:  "API Key set",
-			Value: keySet,
+			Value: strings.ToTitle(strings.ToLower(strconv.FormatBool(config.Guild.APIKey != ""))),
 		})
 
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-			Name:  "Filters",
-			Value: config.Filter.Message(),
+			Name:  "Command Aliases Disabled",
+			Value: strings.ToTitle(strings.ToLower(strconv.FormatBool(config.Guild.Options.DisableAliases))),
+		})
+
+		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
+			Name:   "Filters",
+			Value:  config.Filter.Message(),
 			Inline: true,
 		})
 
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-			Name:  "Purity",
-			Value: config.Purity.Message(),
+			Name:   "Purity",
+			Value:  config.Purity.Message(),
 			Inline: true,
 		})
 
@@ -104,6 +104,12 @@ func configCommand(s *discordgo.Session, c *discordgo.Channel, m *discordgo.Mess
 			} else {
 				config.Guild.APIKey = args[2]
 			}
+		case "disable_alias":
+			if ok, _ := strconv.ParseBool(args[2]); ok {
+				config.Guild.Options.DisableAliases = true
+			} else {
+				config.Guild.Options.DisableAliases = false
+			}
 		}
 
 		if err := storage.SetGuild(config.Guild); err != nil {
@@ -124,6 +130,11 @@ func configHelp() *discordgo.MessageEmbed {
 	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 		Name:  "API Key (Server Wide)",
 		Value: "`w!config set api_key {key}`\n\nTo disabled `w!config set api_key none`",
+	})
+
+	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
+		Name:  "Disable Category Aliases",
+		Value: "`w!config set disable_alias true|false",
 	})
 
 	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{

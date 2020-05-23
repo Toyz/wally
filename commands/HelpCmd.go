@@ -17,7 +17,7 @@ func init() {
 	})
 }
 
-func showHelp(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string, _ *datasets.Entity) error {
+func showHelp(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string, _ *datasets.Entity, command Command) error {
 	if len(args) > 0 {
 		command, err := GetCommand(args[0])
 		if err != nil {

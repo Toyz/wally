@@ -17,16 +17,67 @@ func init() {
 		Func:        randomImage(),
 		Permissions: -1,
 	})
+
+	Register(Command{
+		Command:     "rg",
+		Desc:        "Random General Image",
+		NSFW:        false,
+		Func:        randomImage(),
+		Permissions: -1,
+	})
+
+	Register(Command{
+		Command:     "ra",
+		Desc:        "Random Anime Image",
+		NSFW:        false,
+		Func:        randomImage(),
+		Permissions: -1,
+	})
+
+	Register(Command{
+		Command:     "rp",
+		Desc:        "Random Person Image",
+		NSFW:        false,
+		Func:        randomImage(),
+		Permissions: -1,
+	})
 }
 
 func randomImage() CommandFunc {
-	return func(s *discordgo.Session, _ *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity) error {
+	return func(s *discordgo.Session, _ *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity, command Command) error {
+		if config.Guild.Options.DisableAliases && command.Command != "r" {
+			return errors.New("Command aliases are disabled")
+		}
+
+		filter := config.Filter.String()
+		lastRune := command.Command[len(command.Command)-1]
+		switch lastRune {
+		case 'g':
+			if config.Channel.Filter.General {
+				filter = "100"
+			} else {
+				return errors.New("Command alias is disabled by filter rules")
+			}
+		case 'a':
+			if config.Channel.Filter.Anime {
+				filter = "010"
+			} else {
+				return errors.New("Command alias is disabled by filter rules")
+			}
+		case 'p':
+			if config.Channel.Filter.People {
+				filter = "001"
+			} else {
+				return errors.New("Command alias is disabled by filter rules")
+			}
+		}
+
 		resolution := ""
 		if len(args) > 0 {
 			resolution = args[0]
 		}
 
-		papers, err := getWallPapers(config.APIKey, config.Filter.String(), config.Purity.String(), resolution)
+		papers, err := getWallPapers(config.APIKey, filter, config.Purity.String(), resolution)
 		if err != nil {
 			return err
 		}

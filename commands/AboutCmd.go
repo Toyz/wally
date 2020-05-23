@@ -15,7 +15,7 @@ func init() {
 	})
 }
 
-func aboutWally(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, _ []string, _ *datasets.Entity) error {
+func aboutWally(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, _ []string, _ *datasets.Entity, command Command) error {
 	embed := new(discordgo.MessageEmbed)
 	embed.Thumbnail = &discordgo.MessageEmbedThumbnail{
 		URL:    "https://i.imgur.com/7EAX8Zi.gif",

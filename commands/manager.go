@@ -7,7 +7,7 @@ import (
 	storage2 "github.com/toyz/wally/storage"
 )
 
-type CommandFunc func(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity) error
+type CommandFunc func(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity, command Command) error
 type HelpFunc func() *discordgo.MessageEmbed
 
 type Command struct {

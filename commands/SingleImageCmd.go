@@ -18,7 +18,7 @@ func init() {
 	})
 }
 
-func singleImage(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity) error {
+func singleImage(s *discordgo.Session, c *discordgo.Channel, m *discordgo.MessageCreate, args []string, config *datasets.Entity, command Command) error {
 	if len(args) == 0 {
 		return errors.New("Invalid command usage `w!v <wallpaper id>` (example: `!v 94x38z`)")
 	}

@@ -52,6 +52,9 @@ func getJson(url, apiKey string, target interface{}) error {
 		return err
 	}
 	defer r.Body.Close()
+	if r.StatusCode != http.StatusTooManyRequests || r.StatusCode != http.StatusOK {
+		return errors.New("Rate limit has been hit")
+	}
 
 	return json.NewDecoder(r.Body).Decode(target)
 }

@@ -16,6 +16,11 @@ var (
 func SingleImage(apiKey, id string) (wallpaper Wallpaper, err error) {
 	var data Single
 	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/w/%s", id), apiKey, &data)
+	if err != nil {
+		log.Printf("failed to decode json: %s", err)
+		err = errors.New("Rate limit has been hit")
+		return
+	}
 	if data.Error != "" {
 		err = errors.New("image does not exist")
 		return
@@ -28,6 +33,12 @@ func SingleImage(apiKey, id string) (wallpaper Wallpaper, err error) {
 func RandomImage(apiKey, category, purity, resolution string) (wallpaper []Wallpaper, err error) {
 	var data Multi
 	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/search?sorting=random&categories=%s&purity=%s&seed=%s&resolutions=%s", category, purity, rand.String(6), resolution), apiKey, &data)
+	if err != nil {
+		log.Printf("failed to decode json: %s", err)
+		err = errors.New("Rate limit has been hit")
+		return
+	}
+
 	if data.Error != "" {
 		err = errors.New("image does not exist")
 		return
@@ -52,9 +63,6 @@ func getJson(url, apiKey string, target interface{}) error {
 		return err
 	}
 	defer r.Body.Close()
-	if r.StatusCode != http.StatusTooManyRequests || r.StatusCode != http.StatusOK {
-		return errors.New("Rate limit has been hit")
-	}
 
 	return json.NewDecoder(r.Body).Decode(target)
 }

@@ -2,11 +2,12 @@ package commands
 
 import (
 	"errors"
+	"math/rand"
+	"time"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/toyz/wally/datasets"
 	"github.com/toyz/wally/wallhaven"
-	"math/rand"
-	"time"
 )
 
 func init() {
@@ -76,13 +77,13 @@ func randomImage() CommandFunc {
 			resolution = args[0]
 		}
 
-		papers, err := getWallPapers(config.APIKey, filter, config.Purity.String(), resolution)
+		papers, err := getWallPapers(filter, config.Purity.String(), resolution)
 		if err != nil {
 			return err
 		}
 
 		paper := randomWallpaper(papers)
-		paper, err = wallhaven.SingleImage(config.Guild.APIKey, paper.ID)
+		paper, err = wallhaven.SingleImage(paper.ID)
 		if err != nil {
 			return err
 		}
@@ -93,12 +94,12 @@ func randomImage() CommandFunc {
 }
 
 // 111 (general/anime/people)
-func getWallPapers(apiKey, category, purity, resolution string) ([]wallhaven.Wallpaper, error) {
+func getWallPapers(category, purity, resolution string) ([]wallhaven.Wallpaper, error) {
 	if category == "" {
 
 		category = "111"
 	}
-	papers, err := wallhaven.RandomImage(apiKey, category, purity, resolution)
+	papers, err := wallhaven.RandomImage(category, purity, resolution)
 	if err != nil {
 		return nil, err
 	}

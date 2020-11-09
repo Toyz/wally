@@ -2,10 +2,11 @@ package commands
 
 import (
 	"errors"
-	"github.com/bwmarrin/discordgo"
-	"github.com/toyz/wally/datasets"
 	"strconv"
 	"strings"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/toyz/wally/datasets"
 )
 
 func init() {
@@ -23,12 +24,12 @@ func configCommand(s *discordgo.Session, c *discordgo.Channel, m *discordgo.Mess
 	if len(args) == 0 {
 		embed := new(discordgo.MessageEmbed)
 		embed.Title = "Wally Config"
-
-		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-			Name:  "API Key set",
-			Value: strings.ToTitle(strings.ToLower(strconv.FormatBool(config.Guild.APIKey != ""))),
-		})
-
+		/*
+			embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
+				Name:  "API Key set",
+				Value: strings.ToTitle(strings.ToLower(strconv.FormatBool(config.Guild.APIKey != ""))),
+			})
+		*/
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 			Name:  "Command Aliases Disabled",
 			Value: strings.ToTitle(strings.ToLower(strconv.FormatBool(config.Guild.Options.DisableAliases))),
@@ -98,12 +99,14 @@ func configCommand(s *discordgo.Session, c *discordgo.Channel, m *discordgo.Mess
 		}
 
 		switch strings.ToLower(args[1]) {
-		case "api_key":
-			if args[2] == "none" {
-				config.Guild.APIKey = ""
-			} else {
-				config.Guild.APIKey = args[2]
-			}
+		/*
+			case "api_key":
+				if args[2] == "none" {
+					config.Guild.APIKey = ""
+				} else {
+					config.Guild.APIKey = args[2]
+				}
+		*/
 		case "disable_alias":
 			if ok, _ := strconv.ParseBool(args[2]); ok {
 				config.Guild.Options.DisableAliases = true

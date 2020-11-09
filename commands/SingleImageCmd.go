@@ -3,6 +3,7 @@ package commands
 import (
 	"errors"
 	"fmt"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/toyz/wally/datasets"
 	"github.com/toyz/wally/wallhaven"
@@ -23,7 +24,7 @@ func singleImage(s *discordgo.Session, c *discordgo.Channel, m *discordgo.Messag
 		return errors.New("Invalid command usage `w!v <wallpaper id>` (example: `!v 94x38z`)")
 	}
 
-	image, err := wallhaven.SingleImage(config.Guild.APIKey, args[0])
+	image, err := wallhaven.SingleImage(args[0])
 	if err != nil {
 		return err
 	}

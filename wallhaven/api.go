@@ -4,19 +4,25 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/toyz/wally/tools/rand"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/toyz/wally/tools/rand"
 )
 
 var (
 	myClient = &http.Client{Timeout: 10 * time.Second}
+	ProxyURL = "https://wallhaven.cc/api/v1/"
 )
 
-func SingleImage(apiKey, id string) (wallpaper Wallpaper, err error) {
+func SetProxyURL(key *string) {
+	ProxyURL = *key
+}
+
+func SingleImage(id string) (wallpaper Wallpaper, err error) {
 	var data Single
-	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/w/%s", id), apiKey, &data)
+	err = getJson(fmt.Sprintf("w/%s", id), &data)
 	if err != nil {
 		log.Printf("failed to decode json: %s", err)
 		err = errors.New("Rate limit has been hit")
@@ -31,9 +37,9 @@ func SingleImage(apiKey, id string) (wallpaper Wallpaper, err error) {
 	return
 }
 
-func RandomImage(apiKey, category, purity, resolution string) (wallpaper []Wallpaper, err error) {
+func RandomImage(category, purity, resolution string) (wallpaper []Wallpaper, err error) {
 	var data Multi
-	err = getJson(fmt.Sprintf("https://wallhaven.cc/api/v1/search?sorting=random&categories=%s&purity=%s&seed=%s&resolutions=%s", category, purity, rand.String(6), resolution), apiKey, &data)
+	err = getJson(fmt.Sprintf("search?sorting=random&categories=%s&purity=%s&seed=%s&resolutions=%s", category, purity, rand.String(6), resolution), &data)
 	if err != nil {
 		log.Printf("failed to decode json: %s", err)
 		err = errors.New("Rate limit has been hit")
@@ -41,7 +47,7 @@ func RandomImage(apiKey, category, purity, resolution string) (wallpaper []Wallp
 	}
 
 	if data.Error != "" {
-		err = errors.New("image does not exist")
+		err = fmt.Errorf("Error: %s", data.Error)
 		return
 	}
 
@@ -49,14 +55,10 @@ func RandomImage(apiKey, category, purity, resolution string) (wallpaper []Wallp
 	return
 }
 
-func getJson(url, apiKey string, target interface{}) error {
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+func getJson(url string, target interface{}) error {
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", ProxyURL, url), nil)
 	if err != nil {
 		return nil
-	}
-
-	if apiKey != "" {
-		req.Header.Add("X-API-Key", apiKey)
 	}
 
 	r, err := myClient.Do(req)

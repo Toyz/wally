@@ -2,18 +2,20 @@ package main
 
 import (
 	"fmt"
-	"github.com/bwmarrin/discordgo"
-	commands2 "github.com/toyz/wally/commands"
-	"github.com/toyz/wally/datasets"
-	"github.com/toyz/wally/storage"
-	"github.com/toyz/wally/tools/permissions"
-	"gopkg.in/alecthomas/kingpin.v2"
 	"log"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/bwmarrin/discordgo"
+	commands2 "github.com/toyz/wally/commands"
+	"github.com/toyz/wally/datasets"
+	"github.com/toyz/wally/storage"
+	"github.com/toyz/wally/tools/permissions"
+	"github.com/toyz/wally/wallhaven"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 var (
@@ -24,6 +26,7 @@ var (
 	DatabaseDB   *string
 	DatabaseUser *string
 	DatabasePass *string
+	ProxyURL     *string
 
 	Datastore storage.Storage
 )
@@ -35,6 +38,7 @@ func init() {
 	DatabaseDB = kingpin.Flag("database_name", "Database name").Envar("DATABASE_NAME").Default("./database.db").String()
 	DatabaseUser = kingpin.Flag("database_user", "Database username").Envar("DATABASE_USER").Default("").String()
 	DatabasePass = kingpin.Flag("database_pass", "Database password").Envar("DATABASE_PASS").Default("").String()
+	ProxyURL = kingpin.Flag("proxy_url", "Wallhaven API Proxy URL").Envar("PROXY_URL").Default("").String()
 
 	kingpin.Parse()
 }
@@ -49,6 +53,10 @@ func main() {
 	})
 	commands2.RegisterStorage(Datastore)
 	defer Datastore.Close()
+
+	if ProxyURL != nil {
+		wallhaven.SetProxyURL(ProxyURL)
+	}
 
 	dg, err := discordgo.New(fmt.Sprintf("Bot %s", *Token))
 	if err != nil {
